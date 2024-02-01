@@ -46,11 +46,21 @@ class HomeView extends StatelessWidget {
   }
 
   _bodyWidget(context) {
+    final cartItemIdList = Provider.of<ItemProvider>(context)
+        .cartList
+        .map((itemModel) => itemModel.id)
+        .toList();
+
     /// 아이템 목록
     return ListView.builder(
       itemCount: Provider.of<ItemProvider>(context).itemList.length,
       itemBuilder: (context, index) {
-        return ItemBlock(index: index);
+        return ItemBlock(
+          itemModel: Provider.of<ItemProvider>(context).itemList[index],
+          isInCart: cartItemIdList.contains(
+            Provider.of<ItemProvider>(context).itemList[index].id,
+          ),
+        );
       },
     );
   }

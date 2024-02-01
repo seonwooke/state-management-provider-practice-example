@@ -95,7 +95,9 @@ class CartView extends StatelessWidget {
           child: ListView.builder(
             itemCount: Provider.of<ItemProvider>(context).cartList.length,
             itemBuilder: (context, index) {
-              return CartBlock(index: index);
+              return CartBlock(
+                itemModel: Provider.of<ItemProvider>(context).cartList[index],
+              );
             },
           ),
         ),

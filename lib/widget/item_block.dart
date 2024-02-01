@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/item_model.dart';
 import '../provider/item_provider.dart';
 
 class ItemBlock extends StatelessWidget {
-  final int index;
-  const ItemBlock({super.key, required this.index});
+  final ItemModel itemModel;
+  final bool isInCart;
+
+  const ItemBlock({
+    super.key,
+    required this.itemModel,
+    required this.isInCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +29,7 @@ class ItemBlock extends StatelessWidget {
               height: 90,
               width: 90,
               decoration: BoxDecoration(
-                color: Provider.of<ItemProvider>(context).itemList[index].color,
+                color: itemModel.color,
                 border: Border.all(
                   width: 1,
                   color: Colors.black,
@@ -31,7 +38,7 @@ class ItemBlock extends StatelessWidget {
               ),
             ),
 
-            /// 아이템 이름, 아이템 가격, 장바구니 추가
+            /// 아이템 이름, 아이템 가격
             SizedBox(
               width: 150,
               child: Column(
@@ -40,7 +47,7 @@ class ItemBlock extends StatelessWidget {
                 children: [
                   /// 아이템 이름
                   Text(
-                    Provider.of<ItemProvider>(context).itemList[index].name,
+                    itemModel.name,
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
@@ -51,7 +58,7 @@ class ItemBlock extends StatelessWidget {
 
                   /// 아이템 가격
                   Text(
-                    '${Provider.of<ItemProvider>(context).itemList[index].price.toString()}원',
+                    '${itemModel.price.toString()}원',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -63,11 +70,10 @@ class ItemBlock extends StatelessWidget {
 
             /// 장바구니 추가
             ElevatedButton(
-              onPressed:
-                  Provider.of<ItemProvider>(context).itemList[index].isCart
-                      ? null
-                      : () => Provider.of<ItemProvider>(context, listen: false)
-                          .addCart(index),
+              onPressed: isInCart
+                  ? null
+                  : () => Provider.of<ItemProvider>(context, listen: false)
+                      .addCart(itemModel),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith((states) {
                   return Colors.white;
@@ -80,11 +86,7 @@ class ItemBlock extends StatelessWidget {
                 side: MaterialStateProperty.resolveWith((states) {
                   return BorderSide(
                     width: 1,
-                    color: Provider.of<ItemProvider>(context)
-                            .itemList[index]
-                            .isCart
-                        ? Colors.grey
-                        : Colors.black,
+                    color: isInCart ? Colors.grey : Colors.black,
                   );
                 }),
                 minimumSize: MaterialStateProperty.resolveWith((states) {
@@ -94,7 +96,7 @@ class ItemBlock extends StatelessWidget {
                   return 0;
                 }),
               ),
-              child: Provider.of<ItemProvider>(context).itemList[index].isCart
+              child: isInCart
                   ? const Icon(Icons.check)
                   : const Text(
                       '담기',

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/item_model.dart';
 import '../provider/item_provider.dart';
 
 class CartBlock extends StatelessWidget {
-  final int index;
-  const CartBlock({super.key, required this.index});
+  final ItemModel itemModel;
+
+  const CartBlock({
+    super.key,
+    required this.itemModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,7 @@ class CartBlock extends StatelessWidget {
               height: 90,
               width: 90,
               decoration: BoxDecoration(
-                color: Provider.of<ItemProvider>(context).cartList[index].color,
+                color: itemModel.color,
                 border: Border.all(
                   width: 1,
                   color: Colors.black,
@@ -31,7 +36,7 @@ class CartBlock extends StatelessWidget {
               ),
             ),
 
-            /// 아이템 이름, 아이템 가격, 장바구니 삭제
+            /// 아이템 이름, 아이템 가격
             SizedBox(
               width: 150,
               child: Column(
@@ -40,7 +45,7 @@ class CartBlock extends StatelessWidget {
                 children: [
                   /// 아이템 이름
                   Text(
-                    Provider.of<ItemProvider>(context).cartList[index].name,
+                    itemModel.name,
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
@@ -51,7 +56,7 @@ class CartBlock extends StatelessWidget {
 
                   /// 아이템 가격
                   Text(
-                    '${Provider.of<ItemProvider>(context).cartList[index].price.toString()}원',
+                    '${itemModel.price.toString()}원',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -65,7 +70,7 @@ class CartBlock extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Provider.of<ItemProvider>(context, listen: false)
-                    .removeCart(index);
+                    .removeCart(itemModel);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith((states) {
